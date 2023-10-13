@@ -1,7 +1,6 @@
 from datetime import datetime
 import pandas as pd
 
-
 def DeterminarCausas(fusionCodes, S4Codes, CopernicusReleaseDate, Timeline, CopernicusStatus, PhWEBStatus, Factory, CTR, LaunchDate, ERD, SEAssigned, ReportDate, LaunchChange):
     if Factory in fusionCodes:
         cause = "Fusion Factory Code"
@@ -44,9 +43,9 @@ def DeterminarCausas(fusionCodes, S4Codes, CopernicusReleaseDate, Timeline, Cope
                         elif LaunchDate > ReportDate:
                             if LaunchChange == "Y":
                                 cause = "Program moved to a future launch, ERD wasn't updated"
-                            else: #El launchdate del programa es posterior al reporte pero no hubo cambio de launch
+                            else: #El launch date del programa es posterior al reporte pero no hubo cambio de launch
                                 cause = "Program in future launch, ERD wasn't set up correctly"
-                        else: #el date de launch es anterior al reporte (el producto debió haber salido ya) 
+                        else: #el date de release es anterior al reporte (el producto debió haber salido ya) 
                             if Factory == "801M":
                                 if SEAssigned == "Y":
                                     cause = "Chippewa Falls Factory - delayed CTR"
@@ -80,7 +79,6 @@ def DeterminarCausas(fusionCodes, S4Codes, CopernicusReleaseDate, Timeline, Cope
                                             cause = "Program hasn't CTR - ERD doesn't align with its release date on Copernicus"#el date de launch es anterior al reporte (el producto debió haber salido ya) 
                                               
     return cause
-    
 
 #Programa Principal
 #Creo listas con los códigos de fábrica en S4 (base de datos actual) y los códigos usados en fusion (base de datos antigua)
@@ -88,11 +86,11 @@ fusionCodes = ["5200","5252","5223","5248","9010","S700","S7EM","H100","JK01","J
 S4Codes = ["11BE", "1A1E", "12BE", "1B1E", "210E", "21BE", "302M", "401E", "801M", "220E", "22BE", "3C2E", "3J1E", "3C1E", "3J1D", "2H0E", "230E", "23BE", "29BE", "23AE", "2A0E", "2B0E", "2C0E", "2D0E", "2G0E", "290E", "8P2M", "802N", "8P1M", "1C0E", "1C2E", "1C9E", "1D1E", "3J2E", "804N"]
 
 archivo = "PUNR overdue 20231005" #Nombre del archivo, esto puede cambiarse a un input
-df = pd.read_excel(archivo+".xlsx") #Lee el archivo de excel y lo convierte en un dataframe
-df["Cause"] = "" #Genera una columna para almacenar las causas en el dataframe
 archivoSeparado = archivo.split(' ') #Separa el nombre del archivo usando el espacio como separador y mete esos valores en una lista
 reportDateTexto = archivoSeparado[-1] #Agarra el último valor de la lista anterior y lo toma como fecha, para estos archivos el ultimo valor siempre es la fecha de generación del reporte
 reportDate = datetime.strptime(reportDateTexto, "%Y%m%d") #cambia el texto de la fecha en una fecha en formato datetime
+df = pd.read_excel(archivo+".xlsx") #Lee el archivo de excel y lo convierte en un dataframe
+df["Cause"] = "" #Genera una columna para almacenar las causas en el dataframe
 
 #Hay que eliminar del reporte todos los bloqueos cuyo ERD es mayor a la fecha del reporte, es decir, hay que dejar solo los bloqueos cuya remoción está atrasada
 df = df[df['Expected Resolution Date'] <= int(reportDateTexto)]
@@ -112,7 +110,6 @@ for i in df.index:
     
     cause = DeterminarCausas(fusionCodes, S4Codes, CopernicusReleaseDate, Timeline, CopernicusStatus, PhWEBStatus, Factory, CTR, LaunchDate, ERD, SEAssigned, reportDate, LaunchChange)
     df.at[i, "Cause"] = cause
-        
+
 
 df.to_excel('Resultados-Causas.xlsx', index=False) #Genera un archivo de excel con el nuevo dataframe que contiene las causas. 
-
