@@ -1,17 +1,5 @@
-"""
-Created on Mon Oct  2 16:02:58 2023
-
-@author: Johnny
-"""
-
-#Instalar librerias que no trae python
-#En el prompt de Anaconda: conda install package-name
-#luego hacer la de reiniciar el kernel y poner pip install package-name en la consola
-
 from datetime import datetime
 import pandas as pd
-#import numpy as np
-
 
 
 def DeterminarCausas(fusionCodes, S4Codes, CopernicusReleaseDate, Timeline, CopernicusStatus, PhWEBStatus, Factory, CTR, LaunchDate, ERD, SEAssigned, ReportDate, LaunchChange):
@@ -92,20 +80,12 @@ def DeterminarCausas(fusionCodes, S4Codes, CopernicusReleaseDate, Timeline, Cope
                                             cause = "Program hasn't CTR - ERD doesn't align with its release date on Copernicus"#el date de launch es anterior al reporte (el producto debió haber salido ya) 
                                               
     return cause
-
-
-def EtiquetarDatos(df):
     
-    
-    
-    
-    return df.analisis
 
 #Programa Principal
 #Creo listas con los códigos de fábrica en S4 (base de datos actual) y los códigos usados en fusion (base de datos antigua)
 fusionCodes = ["5200","5252","5223","5248","9010","S700","S7EM","H100","JK01","JK03","AC01","BF05","8O00","8SWE","Z400","XG01","EF00","G100","G111","G110","ER00","BF05","G101","32F2","33SC","33C1","0581","PD90"]
 S4Codes = ["11BE", "1A1E", "12BE", "1B1E", "210E", "21BE", "302M", "401E", "801M", "220E", "22BE", "3C2E", "3J1E", "3C1E", "3J1D", "2H0E", "230E", "23BE", "29BE", "23AE", "2A0E", "2B0E", "2C0E", "2D0E", "2G0E", "290E", "8P2M", "802N", "8P1M", "1C0E", "1C2E", "1C9E", "1D1E", "3J2E", "804N"]
-
 
 archivo = "PUNR overdue 20231005" #Nombre del archivo, esto puede cambiarse a un input
 df = pd.read_excel(archivo+".xlsx") #Lee el archivo de excel y lo convierte en un dataframe
@@ -113,12 +93,9 @@ df["Cause"] = "" #Genera una columna para almacenar las causas en el dataframe
 archivoSeparado = archivo.split(' ') #Separa el nombre del archivo usando el espacio como separador y mete esos valores en una lista
 reportDateTexto = archivoSeparado[-1] #Agarra el último valor de la lista anterior y lo toma como fecha, para estos archivos el ultimo valor siempre es la fecha de generación del reporte
 reportDate = datetime.strptime(reportDateTexto, "%Y%m%d") #cambia el texto de la fecha en una fecha en formato datetime
-#print (reportDate)
-
 
 #Hay que eliminar del reporte todos los bloqueos cuyo ERD es mayor a la fecha del reporte, es decir, hay que dejar solo los bloqueos cuya remoción está atrasada
 df = df[df['Expected Resolution Date'] <= int(reportDateTexto)]
-
 
 #Ciclo que lee las columnas del dataframe y determina la causa
 for i in df.index:
@@ -139,83 +116,3 @@ for i in df.index:
 
 df.to_excel('Resultados-Causas.xlsx', index=False) #Genera un archivo de excel con el nuevo dataframe que contiene las causas. 
 
-
-"""
-df = pd.read_excel('sample.xlsx')
-
-
-df["cringe o basado"] = ""
-
-print(df)
-
-
-#df.algo[fila, columna] 
-
-for i in df.index:
-    alpha = df.at[i,"cars"]
-    if alpha == "BMW":
-        df.at[i, "cringe o basado"] = "apesta"
-        print(alpha+" apesta") 
-    else:
-        df.at[i, "cringe o basado"] = "basado"
-        print(alpha+" es basado")
-
-print(df)
-
-print(df["cringe o basado"].values)
-
-df.to_excel('sample.xlsx', index=False)
-"""
-
-#puedo usar df.cars[i] o df.at[i,j]
-
-
-"""
-Fecha = "20231002"
-d1 = datetime.strptime(Fecha, "%Y%m%d")
-print(d1)
-print(d1.year)
-"""
-
-"""
-Fecha = "20231002"
-d1 = datetime.strptime(Fecha, "%Y%m%d")
-print(d1)
-print(d1.year)
-"""
-
-"""
-Timeline = "HPE Storage Disk Standard Setup"
-if "Storage" in Timeline:
-    print("lmao storage kekL")
-else:
-    (print("bASED"))
-"""
-
-"""
-Fecha1 = "20231002"
-d1 = datetime.strptime(Fecha1, "%Y%m%d")
-d1A = date(d1.year, d1.month, d1.day)
-
-Fecha2 = "20231015"
-d2 = datetime.strptime(Fecha2, "%Y%m%d")
-
-dif=abs(d2-d1)
-
-print(dif.days)
-
-
-if abs(dif.days) <= 15:
-    print ("15 days grace period")
-else:
-    print("vas tarde papirrico")
-"""
-  
-
-""" 
-array = ["2C2E","3J1D","804N","401E","210E"]
-if "210E" in array:
-    print("Mexico we")
-else:
-    print ("Keep trying")
-"""   
