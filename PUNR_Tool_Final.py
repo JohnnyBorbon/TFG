@@ -1,14 +1,3 @@
-"""
-Created on Mon Oct  2 16:02:58 2023
-
-@author: Johnny
-"""
-
-#Instalar librerias que no trae python
-#En el prompt de Anaconda: conda install package-name
-#luego hacer la de reiniciar el kernel y poner pip install package-name en la consola i.e: pip install statsmodels
-
-
 from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
